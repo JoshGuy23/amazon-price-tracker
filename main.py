@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import lxml
 
 amazon_url = "https://www.amazon.com/dp/B075CYMYK6?ref_=cm_sw_r_cp_ud_ct_FM9M699VKHTT47YD50Q6&th=1"
 # amazon_url = input("Please enter the Amazon link of the product you wish to buy: \n")
@@ -22,4 +23,10 @@ headers = {
 response = requests.get(url=amazon_url, headers=headers)
 response.raise_for_status()
 webpage = response.text
-print(webpage)
+
+soup = BeautifulSoup(webpage, "lxml")
+whole_num = soup.find(name="span", class_="a-price-whole").getText().split(".")[0]
+fraction_num = soup.find(name="span", class_="a-price-fraction").getText()
+
+item_price = float(f"{whole_num}.{fraction_num}")
+print(item_price)
